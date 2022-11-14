@@ -1,26 +1,41 @@
-import React from 'react';
-import { Formik, Field } from 'formik';
-import { TextField } from 'formik-mui';
-import { Order } from '../entities';
-import { MetadataOptions, propertiesKey, propertyMetadata } from '../metadata';
-import { Button } from '@mui/material';
+/* eslint-disable @typescript-eslint/prefer-ts-expect-error */
+/* eslint-disable @typescript-eslint/ban-ts-comment */
+/* eslint-disable @typescript-eslint/consistent-indexed-object-style */
+/* eslint-disable @typescript-eslint/prefer-nullish-coalescing */
+/* eslint-disable @typescript-eslint/ban-types */
+import {Button, Stack} from '@mui/material';
+import type {FieldConfig} from 'formik';
+import {Field, Formik} from 'formik';
+import {TextField} from 'formik-mui';
+import React, {useMemo} from 'react';
 
-export const Form = () => {
-    return <Formik initialValues={{}} onSubmit={(v) => console.log(v)}>
-        {({ submitForm }) => <>
-            {(Reflect.getMetadata(propertiesKey, Order.prototype) || []).map((key: string) => {
-                const meta: MetadataOptions | undefined = Reflect.getMetadata(propertyMetadata, Order.prototype, key);
-                if (!meta) return null;
+export type FormProps<T> = {
+	renderMap: Map<keyof T, {label?: string; component?: FieldConfig['component']}>;
+	// @ts-ignore
+	validate: (v: Partial<T> | T) => Promise<{[key: keyof T]: string}> | void;
+	onSubmit: (v: T) => void;
+	initialValue?: T;
+};
 
-                return <Field 
-                    component={TextField}
-                    key={key}
-                    name={key}
-                    label={key}
-                />
-            })}
+export function Form<T extends object>({renderMap, validate, onSubmit, initialValue}: FormProps<T>) {
+	const mapEntry = Array.from(renderMap.entries());
 
-            <Button onClick={submitForm}>ok</Button>
-        </>}
-    </Formik>
+	const empty = useMemo(() => mapEntry.reduce((acc, [key]) => {
+		acc.set(key, '');
+
+		return acc;
+	}, new Map()), []);
+
+	return <Formik initialValues={initialValue || Object.fromEntries(empty.entries()) as T} validate={validate} onSubmit={onSubmit}>
+		{({submitForm}) => <Stack spacing={2}>
+			{mapEntry.map(([key, meta]) => <Field
+				component={meta.component || TextField}
+				key={key}
+				name={key}
+				label={meta.label || key}
+			/>)}
+
+			<Button onClick={submitForm}>ok</Button>
+		</Stack>}
+	</Formik>;
 }

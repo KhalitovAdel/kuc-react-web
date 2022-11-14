@@ -1,0 +1,5 @@
+{
+    "typescript.tsdk": "packages/web/node_modules/typescript/lib",
+    "eslint.lintTask.options": "${workspaceFolder}/packages/web/.eslintrc.js",
+    "npm.packageManager": "npm"
+}

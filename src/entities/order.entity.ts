@@ -1,29 +1,29 @@
-import { M } from "../metadata";
+import {m} from '../metadata';
 
 export enum BuildType {
-    FLAT = 'FLAT', 
-    HOUSE = 'HOUSE',
+	FLAT = 'FLAT',
+	HOUSE = 'HOUSE',
 }
 
 export class Order {
-    @M({type: Number})
-    id!: number;
+	@m({type: Number})
+		id!: number;
 
-    @M({type: Number})
-    price!: number;
+	@m({type: Number})
+		price!: number;
 
-    @M({type: Number})
-    area!: number;
+	@m({type: Number})
+		area!: number;
 
-    @M({type: String, enum: Object.values(BuildType)})
-    buildType!: BuildType;
+	@m({type: String, enum: Object.values(BuildType)})
+		buildType!: BuildType;
 
-    @M({type: Number})
-    userId!: number;
+	@m({type: Number})
+		userId!: number;
 
-    @M({type: String})
-    fullName!: string;
+	@m({type: String})
+		fullName!: string;
 
-    @M({type: Date})
-    createdAt!: Date;
+	@m({type: Date})
+		createdAt!: Date;
 }

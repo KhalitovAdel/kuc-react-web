@@ -1,16 +1,17 @@
-import { propertyMetadata, propertiesKey } from "./constants";
+import {propertyMetadata, propertiesKey} from './constants';
 
-export interface MetadataOptions {
-    type: Function;
-    isPartial?: boolean;
-    isNullable?: boolean;
-    enum?: unknown[];
-}
+export type MetadataOptions = {
+	// eslint-disable-next-line @typescript-eslint/ban-types
+	type: Function;
+	isPartial?: boolean;
+	isNullable?: boolean;
+	enum?: unknown[];
+};
 
-export function M(o: MetadataOptions): PropertyDecorator {
-    return (target, key) => {
-        Reflect.defineMetadata(propertyMetadata, o, target, key);
-        const keys = Reflect.getMetadata(propertiesKey, target) || [];
-        Reflect.defineMetadata(propertiesKey, [...keys, key], target);
-    }
+export function m(o: MetadataOptions): PropertyDecorator {
+	return (target, key) => {
+		Reflect.defineMetadata(propertyMetadata, o, target, key);
+		const keys = Reflect.getMetadata(propertiesKey, target) as string[] || [];
+		Reflect.defineMetadata(propertiesKey, [...keys, key], target);
+	};
 }
